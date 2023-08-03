@@ -20,12 +20,27 @@ const getSearchData = async () => {
     const keyword = keywordComp.value;
     const apiKey = `AIzaSyAXSn7_hjliBtqqrIOhtooNjSG935qK9-8`;
     const results = selectComp.value;
+
+    const options = {
+      method: "GET",
+      url: "https://keyword-research-for-youtube.p.rapidapi.com/yttags.php",
+      params: {
+        keyword: `${keyword}`,
+      },
+      headers: {
+        "X-RapidAPI-Key": "1b6c3f2feamsh8ca87ae6b6507bap173685jsn5063b8db002d",
+        "X-RapidAPI-Host": "keyword-research-for-youtube.p.rapidapi.com",
+      },
+    };
+    const response = await axios.request(options);
+    console.log(response.data.exact_keyword[0].monthlysearch);
+
     const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&key=${apiKey}&q=${keyword}&maxResults=${results}`;
     const responses = await axios.get(apiUrl);
     console.log(responses);
 
     const divEle = document.createElement("div");
-    divEle.innerHTML = `<b>Keyword: ${keyword}</b> <br/> <b>Search Volume: ${responses.data.pageInfo.totalResults}</b>`;
+    divEle.innerHTML = `<b>Keyword: ${keyword}</b> <br/> <b>Search Volume: ${response.data.exact_keyword[0].monthlysearch}</b>`;
     totalComp.appendChild(divEle);
 
     responses.data.items.forEach((item) => {
